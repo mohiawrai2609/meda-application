@@ -1,0 +1,224 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  settings  Json     @default("{}")  // SLA timers, reminder config, branding
+  createdAt DateTime @default(now())
+  users     User[]
+  loans     Loan[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  passwordHash   String
+  name           String
+  role           UserRole     @default(PROCESSOR)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  exceptions     Exception[]  @relation("AssignedProcessor")
+  auditLogs      AuditLog[]
+}
+
+enum UserRole {
+  ADMIN
+  PROCESSOR
+  MANAGER
+}
+
+model Loan {
+  id              String       @id @default(uuid())
+  loanNumber      String       @unique
+  borrowerName    String
+  borrowerEmail   String
+  borrowerPhone   String?
+  propertyAddress String?
+  loanAmount      Decimal?
+  loanType        String?      // Conventional, FHA, VA, USDA
+  losReferenceId  String?      // ID in the LOS system
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  exceptions      Exception[]
+}
+
+model Exception {
+  id                String          @id @default(uuid())
+  loanId            String
+  loan              Loan            @relation(fields: [loanId], references: [id])
+  assignedToId      String?
+  assignedTo        User?           @relation("AssignedProcessor", fields: [assignedToId], references: [id])
+  
+  // Exception details
+  exceptionType     ExceptionType
+  documentType      DocumentType
+  description       String          // Human-readable description
+  severity          Severity        @default(MEDIUM)
+  
+  // Status tracking
+  status            ExceptionStatus @default(OPEN)
+  attemptCount      Int             @default(0)
+  maxAttempts       Int             @default(4)
+  
+  // SLA tracking
+  slaDeadline       DateTime?
+  firstContactAt    DateTime?
+  resolvedAt        DateTime?
+  escalatedAt       DateTime?
+  
+  // Relationships
+  communications    Communication[]
+  documents         Document[]
+  auditLogs         AuditLog[]
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@index([status])
+  @@index([loanId])
+  @@index([slaDeadline])
+}
+
+enum ExceptionType {
+  MISSING_DOCUMENT
+  MISSING_PAGES
+  EXPIRED_DOCUMENT
+  ILLEGIBLE_SCAN
+  WRONG_DOCUMENT
+  WRONG_ACCOUNT
+  UNSIGNED_FORM
+  DATA_MISMATCH
+  INCOMPLETE_DATA
+  OTHER
+}
+
+enum DocumentType {
+  BANK_STATEMENT      // MVP focus
+  W2
+  TAX_RETURN
+  PAYSTUB
+  VOE
+  APPRAISAL
+  TITLE_REPORT
+  INSURANCE
+  ID_DOCUMENT
+  OTHER
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ExceptionStatus {
+  OPEN                // Just created
+  CONTACTING          // First message sent to borrower
+  AWAITING_RESPONSE   // Waiting for borrower
+  DOCUMENT_RECEIVED   // Borrower uploaded something
+  VALIDATING          // AI is checking the document
+  RESOLVED            // Document accepted, exception closed
+  ESCALATED           // Handed to human processor
+  CANCELLED           // No longer needed
+}
+
+model Communication {
+  id            String            @id @default(uuid())
+  exceptionId   String
+  exception     Exception         @relation(fields: [exceptionId], references: [id])
+  
+  channel       CommChannel       @default(EMAIL)
+  direction     CommDirection     // OUTBOUND (to borrower) or INBOUND (from borrower)
+  messageType   MessageType
+  
+  subject       String?
+  body          String            // The actual message content
+  metadata      Json?             // SendGrid message ID, delivery status, etc.
+  
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  openedAt      DateTime?
+  clickedAt     DateTime?
+  bouncedAt     DateTime?
+  
+  createdAt     DateTime          @default(now())
+  
+  @@index([exceptionId])
+}
+
+enum CommChannel {
+  EMAIL
+  SMS
+  PORTAL
+}
+
+enum CommDirection {
+  OUTBOUND
+  INBOUND
+}
+
+enum MessageType {
+  INITIAL_REQUEST     // First message asking for document
+  REMINDER            // Follow-up reminder
+  CLARIFICATION       // Explaining what was wrong with uploaded doc
+  CONFIRMATION        // Document accepted
+  ESCALATION_NOTICE   // Letting borrower know a human will reach out
+}
+
+model Document {
+  id            String          @id @default(uuid())
+  exceptionId   String
+  exception     Exception       @relation(fields: [exceptionId], references: [id])
+  
+  fileName      String
+  fileType      String          // pdf, jpg, png
+  fileSize      Int
+  storageKey    String          // S3 key
+  storageUrl    String          // Presigned URL (temporary)
+  
+  // Validation results
+  validationStatus ValidationStatus @default(PENDING)
+  validationResult Json?         // Detailed validation output from AI
+  validationErrors String[]      // List of specific issues found
+  
+  uploadedAt    DateTime        @default(now())
+  validatedAt   DateTime?
+  
+  @@index([exceptionId])
+}
+
+enum ValidationStatus {
+  PENDING
+  PROCESSING
+  ACCEPTED
+  REJECTED
+  NEEDS_REVIEW
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  exceptionId   String?
+  exception     Exception? @relation(fields: [exceptionId], references: [id])
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id])
+  
+  action        String   // e.g., "exception.created", "document.validated", "status.changed"
+  details       Json?    // Additional context
+  
+  createdAt     DateTime @default(now())
+  
+  @@index([exceptionId])
+  @@index([createdAt])
+}
