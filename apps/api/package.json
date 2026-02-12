@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "main": "index.ts",
     "scripts": {
-        "dev": "npx ts-node -r tsconfig-paths/register index.ts"
+        "dev": "npx ts-node -r tsconfig-paths/register index.ts",
+        "build": "prisma generate",
+        "start": "node dist/index.js"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.74.0",

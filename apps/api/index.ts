@@ -24,6 +24,10 @@ app.use('/api/admin', adminRouter);
 // Serve uploads statically for MVP
 app.use('/uploads', express.static('uploads'));
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
+}
+
+export default app;
