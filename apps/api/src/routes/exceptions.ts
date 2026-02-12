@@ -34,16 +34,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const exception = await exceptionService.getExceptionById(req.params.id);
-        if (!exception) return res.status(404).json({ error: 'Exception not found' });
-        res.json(exception);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch exception' });
-    }
-});
-
 router.post('/:id/resolve', async (req, res) => {
     try {
         const result = await exceptionService.resolveException(req.params.id);

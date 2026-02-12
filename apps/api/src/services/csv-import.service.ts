@@ -13,9 +13,9 @@ export class CsvImportService {
         this.exceptionService = new ExceptionService();
     }
 
-    async importExceptions(filePath: string) {
+    async importExceptions(filePath: string): Promise<any[]> {
         const results: any[] = [];
-        return new Promise((resolve, reject) => {
+        return new Promise<any[]>((resolve, reject) => {
             fs.createReadStream(filePath)
                 .pipe(csv())
                 .on('data', (data) => results.push(data))
