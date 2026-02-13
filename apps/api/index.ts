@@ -5,7 +5,11 @@ import exceptionRouter from './src/routes/exceptions';
 const app = express();
 const port = process.env.PORT || 3008;
 
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow all origins for MVP
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
