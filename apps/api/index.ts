@@ -45,6 +45,17 @@ app.use('/api/notifications', notificationsRouter);
 // Serve uploads statically for MVP
 app.use('/uploads', express.static('uploads'));
 
+// Auto-run migrations on start (Bypass Render start command env issues)
+import { execSync } from 'child_process';
+try {
+    console.log('Running database migrations...');
+    execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+    console.log('Migrations completed successfully.');
+} catch (error) {
+    console.error('Migration failed:', error);
+    // Determine if we should exit or continue based on failure severity
+}
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
