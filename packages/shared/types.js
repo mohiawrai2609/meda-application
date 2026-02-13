@@ -52,6 +52,7 @@ var MessageType;
     MessageType["ESCALATION"] = "ESCALATION";
     MessageType["CONFIRMATION"] = "CONFIRMATION";
     MessageType["REJECTION"] = "REJECTION";
+    MessageType["INITIAL_REQUEST"] = "INITIAL_REQUEST";
 })(MessageType || (exports.MessageType = MessageType = {}));
 var CommChannel;
 (function (CommChannel) {
