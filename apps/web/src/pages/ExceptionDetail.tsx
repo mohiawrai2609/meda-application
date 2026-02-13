@@ -48,6 +48,8 @@ export default function ExceptionDetail() {
 
     const document = exception.documents && exception.documents.length > 0 ? exception.documents[0] : null;
 
+    const BASE_URL = API_URL.replace('/api', '');
+
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
@@ -136,11 +138,11 @@ export default function ExceptionDetail() {
                                 <span className="font-medium text-sm flex items-center gap-2">
                                     <File size={16} /> {document.fileName}
                                 </span>
-                                <a href={`http://localhost:3000${document.storageUrl}`} target="_blank" className="text-blue-600 text-sm hover:underline">Download</a>
+                                <a href={`${BASE_URL}${document.storageUrl}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">Download</a>
                             </div>
                             {/* In a real app, use PDF.js or similar for better rendering. For MVP, using iframe/img */}
                             <iframe
-                                src={`http://localhost:3000${document.storageUrl}`}
+                                src={`${BASE_URL}${document.storageUrl}`}
                                 className="w-full h-full bg-gray-100"
                                 title="Document Preview"
                             />
