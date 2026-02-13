@@ -4,14 +4,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Organization {
   id        String   @id @default(uuid())
   name      String
-  settings  Json     @default("{}")  // SLA timers, reminder config, branding
+  settings  String     @default("{}")  // SLA timers, reminder config, branding
   createdAt DateTime @default(now())
   users     User[]
   loans     Loan[]
@@ -22,7 +22,7 @@ model User {
   email          String       @unique
   passwordHash   String
   name           String
-  role           UserRole     @default(PROCESSOR)
+  role           String       @default("PROCESSOR")
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
@@ -30,11 +30,11 @@ model User {
   auditLogs      AuditLog[]
 }
 
-enum UserRole {
-  ADMIN
-  PROCESSOR
-  MANAGER
-}
+// enum UserRole {
+//   ADMIN
+//   PROCESSOR
+//   MANAGER
+// }
 
 model Loan {
   id              String       @id @default(uuid())
@@ -43,7 +43,7 @@ model Loan {
   borrowerEmail   String
   borrowerPhone   String?
   propertyAddress String?
-  loanAmount      Decimal?
+  loanAmount      Float?
   loanType        String?      // Conventional, FHA, VA, USDA
   losReferenceId  String?      // ID in the LOS system
   organizationId  String
@@ -61,13 +61,13 @@ model Exception {
   assignedTo        User?           @relation("AssignedProcessor", fields: [assignedToId], references: [id])
   
   // Exception details
-  exceptionType     ExceptionType
-  documentType      DocumentType
+  exceptionType     String
+  documentType      String
   description       String          // Human-readable description
-  severity          Severity        @default(MEDIUM)
+  severity          String        @default("MEDIUM")
   
   // Status tracking
-  status            ExceptionStatus @default(OPEN)
+  status            String @default("OPEN")
   attemptCount      Int             @default(0)
   maxAttempts       Int             @default(4)
   
@@ -90,62 +90,20 @@ model Exception {
   @@index([slaDeadline])
 }
 
-enum ExceptionType {
-  MISSING_DOCUMENT
-  MISSING_PAGES
-  EXPIRED_DOCUMENT
-  ILLEGIBLE_SCAN
-  WRONG_DOCUMENT
-  WRONG_ACCOUNT
-  UNSIGNED_FORM
-  DATA_MISMATCH
-  INCOMPLETE_DATA
-  OTHER
-}
-
-enum DocumentType {
-  BANK_STATEMENT      // MVP focus
-  W2
-  TAX_RETURN
-  PAYSTUB
-  VOE
-  APPRAISAL
-  TITLE_REPORT
-  INSURANCE
-  ID_DOCUMENT
-  OTHER
-}
-
-enum Severity {
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
-}
-
-enum ExceptionStatus {
-  OPEN                // Just created
-  CONTACTING          // First message sent to borrower
-  AWAITING_RESPONSE   // Waiting for borrower
-  DOCUMENT_RECEIVED   // Borrower uploaded something
-  VALIDATING          // AI is checking the document
-  RESOLVED            // Document accepted, exception closed
-  ESCALATED           // Handed to human processor
-  CANCELLED           // No longer needed
-}
+// Removed enums for SQLite compatibility
 
 model Communication {
   id            String            @id @default(uuid())
   exceptionId   String
   exception     Exception         @relation(fields: [exceptionId], references: [id])
   
-  channel       CommChannel       @default(EMAIL)
-  direction     CommDirection     // OUTBOUND (to borrower) or INBOUND (from borrower)
-  messageType   MessageType
+  channel       String       @default("EMAIL")
+  direction     String     // OUTBOUND (to borrower) or INBOUND (from borrower)
+  messageType   String
   
   subject       String?
   body          String            // The actual message content
-  metadata      Json?             // SendGrid message ID, delivery status, etc.
+  metadata      String?             // SendGrid message ID, delivery status, etc.
   
   sentAt        DateTime?
   deliveredAt   DateTime?
@@ -158,24 +116,7 @@ model Communication {
   @@index([exceptionId])
 }
 
-enum CommChannel {
-  EMAIL
-  SMS
-  PORTAL
-}
-
-enum CommDirection {
-  OUTBOUND
-  INBOUND
-}
-
-enum MessageType {
-  INITIAL_REQUEST     // First message asking for document
-  REMINDER            // Follow-up reminder
-  CLARIFICATION       // Explaining what was wrong with uploaded doc
-  CONFIRMATION        // Document accepted
-  ESCALATION_NOTICE   // Letting borrower know a human will reach out
-}
+// Removed enums for SQLite compatibility
 
 model Document {
   id            String          @id @default(uuid())
@@ -189,9 +130,9 @@ model Document {
   storageUrl    String          // Presigned URL (temporary)
   
   // Validation results
-  validationStatus ValidationStatus @default(PENDING)
-  validationResult Json?         // Detailed validation output from AI
-  validationErrors String[]      // List of specific issues found
+  validationStatus String @default("PENDING")
+  validationResult String?         // Detailed validation output from AI
+  validationErrors String?       // List of specific issues found (JSON string)
   
   uploadedAt    DateTime        @default(now())
   validatedAt   DateTime?
@@ -199,13 +140,7 @@ model Document {
   @@index([exceptionId])
 }
 
-enum ValidationStatus {
-  PENDING
-  PROCESSING
-  ACCEPTED
-  REJECTED
-  NEEDS_REVIEW
-}
+// Removed enum for SQLite compatibility
 
 model AuditLog {
   id            String   @id @default(uuid())
@@ -215,7 +150,7 @@ model AuditLog {
   user          User?    @relation(fields: [userId], references: [id])
   
   action        String   // e.g., "exception.created", "document.validated", "status.changed"
-  details       Json?    // Additional context
+  details       String?    // Additional context
   
   createdAt     DateTime @default(now())
   

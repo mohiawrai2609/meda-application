@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import { ExceptionList } from './components/ExceptionList';
 import ExceptionDetail from './pages/ExceptionDetail';
 import Settings from './pages/Settings';
+import Import from './pages/Import';
 import { Activity, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 
 function StatCard({ label, value, change, icon }: any) {
@@ -49,7 +50,7 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/exceptions" element={<ExceptionList />} />
                     <Route path="/exceptions/:id" element={<ExceptionDetail />} />
-                    <Route path="/import" element={<div className="p-8 text-center text-gray-500">CSV Import UI Coming Soon</div>} />
+                    <Route path="/import" element={<Import />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
             </Layout>

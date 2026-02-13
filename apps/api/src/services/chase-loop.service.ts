@@ -44,13 +44,13 @@ export class ChaseLoopService {
         await prisma.communication.create({
             data: {
                 exceptionId: exception.id,
-                channel: CommChannel.EMAIL,
-                direction: CommDirection.OUTBOUND,
-                messageType: MessageType.DOCUMENT_REQUEST,
+                channel: 'EMAIL',
+                direction: 'OUTBOUND',
+                messageType: 'DOCUMENT_REQUEST',
                 subject: message.subject,
                 body: message.body,
                 sentAt: new Date(),
-                metadata: emailResponse as any
+                metadata: JSON.stringify(emailResponse)
             }
         });
 

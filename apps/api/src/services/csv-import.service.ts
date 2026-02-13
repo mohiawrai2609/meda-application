@@ -27,7 +27,7 @@ export class CsvImportService {
                         let defaultOrg = await prisma.organization.findFirst();
                         if (!defaultOrg) {
                             defaultOrg = await prisma.organization.create({
-                                data: { name: 'Default Bank Corp', settings: {} }
+                                data: { name: 'Default Bank Corp', settings: JSON.stringify({}) }
                             });
                         }
 
@@ -55,6 +55,7 @@ export class CsvImportService {
                         }
                         resolve(createdExceptions);
                     } catch (error) {
+                        console.error('CSV Import Service Error:', error);
                         reject(error);
                     }
                 })

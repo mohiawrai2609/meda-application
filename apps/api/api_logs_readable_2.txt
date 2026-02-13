@@ -1,0 +1,78 @@
+﻿
+> @meda/api@1.0.0 dev
+> npx ts-node -r tsconfig-paths/register index.ts
+
+node.exe : Error: listen 
+EADDRINUSE: address already 
+in use :::3000
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Error:   
+  listen E... in use :::30   
+ 00:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+    at 
+Server.setupListenHandle [as 
+_listen2] (node:net:1940:16)
+    at listenInCluster 
+(node:net:1997:12)
+    at Server.listen 
+(node:net:2102:7)
+    at app.listen (C:\Users\m
+ohin\OneDrive\Documents\Deskt
+op\meda\node_modules\express\
+lib\application.js:635:24)
+    at Object.<anonymous> (C:
+\Users\mohin\OneDrive\Documen
+ts\Desktop\meda\apps\api\inde
+x.ts:28:9)
+    at Module._compile (node:
+internal/modules/cjs/loader:1
+804:14)
+    at Module.m._compile (C:\
+Users\mohin\OneDrive\Document
+s\Desktop\meda\node_modules\t
+s-node\src\index.ts:1618:23)
+    at node:internal/modules/
+cjs/loader:1936:10
+    at Object.require.extensi
+ons.<computed> [as .ts] (C:\U
+sers\mohin\OneDrive\Documents
+\Desktop\meda\node_modules\ts
+-node\src\index.ts:1621:12)
+    at Module.load (node:inte
+rnal/modules/cjs/loader:1525:
+32) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+npm error Lifecycle script 
+`dev` failed with error:
+npm error code 1
+npm error path C:\Users\mohin
+\OneDrive\Documents\Desktop\m
+eda\apps\api
+npm error workspace 
+@meda/api@1.0.0
+npm error location C:\Users\m
+ohin\OneDrive\Documents\Deskt
+op\meda\apps\api
+npm error command failed
+npm error command 
+C:\WINDOWS\system32\cmd.exe 
+/d /s /c npx ts-node -r 
+tsconfig-paths/register 
+index.ts

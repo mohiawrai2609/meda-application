@@ -41,24 +41,29 @@ export class ExceptionService {
             data.exceptionType = ExceptionType.MISSING_DOCUMENT; // Default
         }
 
-        const result = await prisma.exception.create({
-            data: {
-                ...data,
-                status: ExceptionStatus.OPEN,
-                auditLogs: {
-                    create: {
-                        action: 'exception.created',
-                        details: { source: 'manual_creation' }
+        try {
+            const result = await prisma.exception.create({
+                data: {
+                    ...data,
+                    status: ExceptionStatus.OPEN,
+                    auditLogs: {
+                        create: {
+                            action: 'exception.created',
+                            details: JSON.stringify({ source: 'manual_creation' })
+                        }
                     }
-                }
-            },
-        });
+                },
+            });
 
-        // Trigger async chase loop (fire and forget)
-        const chaseLoop = new ChaseLoopService();
-        chaseLoop.processNewException(result.id).catch(err => console.error('Chase Loop Error:', err));
+            // Trigger async chase loop (fire and forget)
+            const chaseLoop = new ChaseLoopService();
+            chaseLoop.processNewException(result.id).catch(err => console.error('Chase Loop Error:', err));
 
-        return result;
+            return result;
+        } catch (error) {
+            console.error('Prisma Create Exception Error:', error);
+            throw error;
+        }
     }
 
     async updateException(id: string, data: any) {
@@ -78,7 +83,7 @@ export class ExceptionService {
                 auditLogs: {
                     create: {
                         action: 'exception.resolved',
-                        details: { user: 'processor' } // In real app, use auth user ID
+                        details: JSON.stringify({ user: 'processor' }) // In real app, use auth user ID
                     }
                 }
             }
@@ -96,7 +101,7 @@ export class ExceptionService {
                 auditLogs: {
                     create: {
                         action: 'exception.rejected',
-                        details: { reason, user: 'processor' }
+                        details: JSON.stringify({ reason, user: 'processor' })
                     }
                 }
             }

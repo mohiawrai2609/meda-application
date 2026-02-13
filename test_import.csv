@@ -1,0 +1,2 @@
+loan_number,borrower_name,borrower_email,exception_type,document_type,description,severity
+999888777,Test User,test.user@example.com,MISSING_DOCUMENT,W2,"Last year W2 is missing from the file",CRITICAL
