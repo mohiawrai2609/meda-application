@@ -18,7 +18,13 @@
         "**/*.ts"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "debug-prisma.ts",
+        "test-db.ts",
+        "test-seed.ts",
+        "test_db.ts",
+        "debug_email.ts",
+        "check_emails.ts"
     ],
     "ts-node": {
         "transpileOnly": true,
