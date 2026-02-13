@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle, XCircle, ArrowLeft, FileText, Clock, User, File } from 'lucide-react';
-import { Exception, ExceptionStatus } from '../types';
+import { CheckCircle, XCircle, ArrowLeft, FileText, User, File } from 'lucide-react';
+
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
