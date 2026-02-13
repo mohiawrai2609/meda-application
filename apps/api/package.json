@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "npx ts-node -r tsconfig-paths/register index.ts",
         "build": "prisma generate && tsc",
-        "start": "node dist/index.js"
+        "start": "node dist/apps/api/index.js"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.74.0",
