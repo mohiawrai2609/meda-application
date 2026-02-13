@@ -24,9 +24,10 @@ export class AIService {
         if (!this.apiKey || this.apiKey.startsWith('sk-ant-api03-...')) {
             // Return mock response if no API key is set
             console.log('Using Mock AI Response (No API Key)');
+            const portalLink = `${process.env.PORTAL_BASE_URL || 'http://localhost:5174'}/?id=${exception.id}`;
             return {
                 subject: `Action Required: Mortgage Document Issue - ${loanContext.loanNumber}`,
-                body: `Hello ${loanContext.borrowerName},\n\nWe are reviewing your mortgage application and noticed an issue with your ${exception.documentType}.Specifically: ${exception.description}.\n\nPlease upload the corrected document using the link below.\n\nThank you,\nLoan Processing Team`
+                body: `Hello ${loanContext.borrowerName},\n\nWe are reviewing your mortgage application and noticed an issue with your ${exception.documentType}. Specifically: ${exception.description}.\n\nPlease click the link below to upload the corrected document:\n\n${portalLink}\n\nThank you,\nLoan Processing Team`
             };
         }
 
@@ -40,15 +41,16 @@ export class AIService {
     - Keep emails under 200 words
     - Always include a clear call to action`;
 
-        const userPrompt = `Generate an email for the following exception:
-    - Borrower name: ${loanContext.borrowerName}
-    - Exception type: ${exception.exceptionType}
-    - Document type: ${exception.documentType}
-    - Specific issue: ${exception.description}
-    - Loan details: Loan #${loanContext.loanNumber}
-    - Attempt number: ${attemptCount}
-    
-    Return ONLY a JSON object with "subject" and "body" keys. Do not include any other text.`;
+        const portalLink = `${process.env.PORTAL_BASE_URL || 'http://localhost:5174'}/?id=${exception.id}`;
+
+        const userPrompt = `Generate a friendly email for:
+        - Borrower: ${loanContext.borrowerName}
+        - Problem: ${exception.exceptionType} - ${exception.description}
+        - Asking for: ${exception.documentType}
+        - Loan: #${loanContext.loanNumber}
+        - Portal Link (MUST BE INCLUDED): ${portalLink}
+        
+        Return ONLY a JSON object with "subject" and "body" keys.`;
 
         try {
             const response = await this.anthropic.messages.create({
