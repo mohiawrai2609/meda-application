@@ -7,7 +7,6 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 export default function Settings() {
     const [loading, setLoading] = useState(false);
     const [confirming, setConfirming] = useState(false);
-    const [createdId, setCreatedId] = useState<string | null>(null);
 
     const handleReset = async () => {
         setLoading(true);
@@ -41,35 +40,35 @@ export default function Settings() {
                     </p>
                 </div>
 
-                <div className="p-6 bg-red-50">
+                <div className="p-6 bg-red-50/50">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="font-medium text-gray-900">Reset Demo Data</h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Permanently delete all exceptions, loans, and documents.
+                            <h3 className="font-bold text-slate-800">Reset System Data</h3>
+                            <p className="text-sm text-slate-500 mt-1 max-w-md">
+                                Permanently delete all exceptions, loans, import history, and communications. This action cannot be undone.
                             </p>
                         </div>
 
                         {!confirming ? (
                             <button
                                 onClick={() => setConfirming(true)}
-                                className="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 font-medium transition-colors"
+                                className="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-300 font-semibold transition-all shadow-sm hover:shadow"
                             >
                                 Reset Data
                             </button>
                         ) : (
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm text-red-700 font-medium">Are you sure?</span>
+                            <div className="flex items-center gap-3 bg-red-50 p-2 rounded-xl border border-red-100">
+                                <span className="text-sm text-red-700 font-medium px-2">Are you sure?</span>
                                 <button
                                     onClick={() => setConfirming(false)}
-                                    className="px-3 py-1.5 text-gray-600 hover:text-gray-800 text-sm"
+                                    className="px-4 py-2 text-slate-600 hover:text-slate-800 text-sm font-medium hover:bg-white/50 rounded-lg transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleReset}
                                     disabled={loading}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium flex items-center gap-2"
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium flex items-center gap-2 shadow-sm shadow-red-200"
                                 >
                                     {loading ? 'Resetting...' : <><Trash2 size={16} /> Confirm Reset</>}
                                 </button>
@@ -77,74 +76,30 @@ export default function Settings() {
                         )}
                     </div>
                 </div>
-
-                <div className="p-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="font-medium text-gray-900">Seed Demo Data</h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Create a dummy loan and exception to test the flow immediately.
-                            </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-2">
-                            <button
-                                onClick={async () => {
-                                    try {
-                                        setLoading(true);
-                                        const res = await axios.post(`${API_URL}/admin/seed`);
-                                        setCreatedId(res.data.exceptionId);
-                                        setLoading(false);
-                                    } catch (e: any) {
-                                        console.error('Seed Error Full:', e);
-                                        alert(`Failed to seed data: ${e.response?.data?.error || e.message}\n\nDetails: ${e.response?.data?.details || 'Check terminal'}`);
-                                        setLoading(false);
-                                    }
-                                }}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
-                            >
-                                {loading ? 'Creating...' : 'Create Test Data'}
-                            </button>
-
-                            {createdId && (
-                                <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm">
-                                    <p className="font-semibold text-blue-900 mb-1">Success! Exception Created:</p>
-                                    <code className="bg-white px-2 py-1 rounded border border-blue-200 block mb-2 select-all">
-                                        {createdId}
-                                    </code>
-                                    <a
-                                        href={`http://localhost:5174/?id=${createdId}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:underline font-medium inline-flex items-center gap-1"
-                                    >
-                                        Open Borrower Portal →
-                                    </a>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-green-100 text-green-600 rounded-lg">
-                        <ShieldCheck size={24} />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-900">System Status</h2>
-                        <p className="text-gray-500 text-sm">All services operational</p>
+            {/* System Status Section */}
+            <div className="mt-8 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="p-8 border-b border-slate-100">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-emerald-100/50 text-emerald-600 rounded-xl">
+                            <ShieldCheck size={28} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-900">System Status</h2>
+                            <p className="text-slate-500 text-sm mt-1">Operational health and environment details</p>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <label className="text-xs font-semibold text-gray-500 uppercase">API Version</label>
-                        <div className="mt-1 font-mono text-gray-900">v1.0.0 (MVP)</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8">
+                    <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">API Version</label>
+                        <div className="mt-2 font-mono text-slate-700 font-semibold">v1.0.0 (MVP)</div>
                     </div>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <label className="text-xs font-semibold text-gray-500 uppercase">Environment</label>
-                        <div className="mt-1 font-mono text-gray-900">Development (Docker)</div>
+                    <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Environment</label>
+                        <div className="mt-2 font-mono text-slate-700 font-semibold">Development (Local)</div>
                     </div>
                 </div>
             </div>

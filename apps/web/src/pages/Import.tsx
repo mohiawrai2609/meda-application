@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Upload, FileText, CheckCircle, AlertCircle, Loader2, Download, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 
@@ -41,8 +41,8 @@ export default function Import() {
     };
 
     const downloadTemplate = () => {
-        const headers = 'loan_number,borrower_name,borrower_email,exception_type,document_type,description,severity';
-        const sampleRow = '\n123456789,John Doe,john.doe@example.com,MISSING_DOCUMENT,BANK_STATEMENT,"Missing last 2 months of statements",HIGH';
+        const headers = 'loan_number,borrower_name,borrower_email,exception_type,required_documents,missing_document,status,severity,description';
+        const sampleRow = '\n987654321,Alice Smith,alice.smith@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, Bank Statement",Bank Statement,OPEN,MEDIUM,"Missing last 3 months statement"';
         const blob = new Blob([headers + sampleRow], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -170,8 +170,8 @@ export default function Import() {
                             <p className="text-gray-400">Where requests are sent</p>
                         </div>
                         <div>
-                            <span className="text-gray-500 font-medium">exception_type</span>
-                            <p className="text-gray-400">MISSING_DOCUMENT, etc.</p>
+                            <span className="text-gray-500 font-medium">missing_document</span>
+                            <p className="text-gray-400">The specific document needed</p>
                         </div>
                         <div>
                             <span className="text-gray-500 font-medium">severity</span>

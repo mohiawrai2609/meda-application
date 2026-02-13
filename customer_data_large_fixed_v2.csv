@@ -1,0 +1,9 @@
+loan_number,borrower_name,borrower_email,exception_type,document_type,description,severity
+2001,Amit Sharma,amit.sharma@example.com,MISSING_DOCUMENT,Bank Statement,Last 3 months statement missing,HIGH
+2002,Priya Singh,priya.singh@example.com,MISSING_DOCUMENT,Form 16,Current year Form 16 required,MEDIUM
+2003,Rahul Verma,rahul.verma@example.com,MISSING_DOCUMENT,Offer Letter,Updated offer letter needed,CRITICAL
+2004,Sneha Gupta,sneha.gupta@example.com,MISSING_DOCUMENT,Property Papers,Sale deed copy unclear,HIGH
+2005,Vikram Malhotra,vikram.malhotra@example.com,MISSING_DOCUMENT,GST Certificate,Latest GST return missing,MEDIUM
+2006,Anjali Desai,anjali.desai@example.com,MISSING_DOCUMENT,Land Records,7/12 extract not attached,HIGH
+2007,Rohan Mehta,rohan.mehta@example.com,MISSING_DOCUMENT,Rent Agreement,Expired agreement attached,LOW
+2008,Kavita Iyer,kavita.iyer@example.com,MISSING_DOCUMENT,Company ID,Clear scan of ID card required,MEDIUM

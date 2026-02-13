@@ -1,0 +1,2 @@
+loan_number,borrower_name,borrower_email,exception_type,document_type,description,severity
+987654321,Alice Smith,alice.smith@example.com,MISSING_DOCUMENT,W2,Missing last year W2 from previous employer,MEDIUM

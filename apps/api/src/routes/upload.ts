@@ -3,6 +3,9 @@ import multer from 'multer';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
 import fs from 'fs';
+import { NotificationService } from '../services/notification.service';
+
+const notificationService = new NotificationService();
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -56,10 +59,17 @@ router.post('/upload/:exceptionId', upload.single('document'), async (req, res) 
                 auditLogs: {
                     create: {
                         action: 'document.uploaded',
-                        details: { documentId: document.id, fileName: document.fileName }
+                        details: JSON.stringify({ documentId: document.id, fileName: document.fileName })
                     }
                 }
             }
+        });
+
+        // Create notification
+        await notificationService.createNotification({
+            title: 'New Document Uploaded',
+            message: `Document "${document.fileName}" was uploaded for exception ${exceptionId.slice(0, 8)}...`,
+            type: 'INFO'
         });
 
         res.json({ message: 'Document uploaded successfully', document });

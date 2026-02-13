@@ -1,0 +1,2 @@
+loan_number,borrower_name,borrower_email,exception_type,document_type,description,severity
+987654321,John Doe,john.doe@example.com,MISSING_DOCUMENT,Bank Statement,Missing last 3 months bank statements,HIGH

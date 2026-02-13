@@ -1,0 +1,6 @@
+--- Debugging Chase Loop ---
+Found Exception: b597b97d-b34e-4703-bfa6-b9e9a4b49e63
+Borrower: Alice Smith
+Chase Loop execution completed.
+Communications found: 1
+Comm created: {"id":"065d6baf-0f69-4ab8-a8f3-0622109bfef6","exceptionId":"b597b97d-b34e-4703-bfa6-b9e9a4b49e63","channel":"EMAIL","direction":"OUTBOUND","messageType":"DOCUMENT_REQUEST","subject":"Action Required: Please upload your W2","body":"Hello Alice Smith,\n\nWe are missing your **W2** for your mortgage application.\n\nSpecific Issue: Missing last year W2 from previous employer.\n\nPlease click the link below to upload your W2:\n\nhttp://localhost:5174/?id=b597b97d-b34e-4703-bfa6-b9e9a4b49e63\n\nThank you,\nLoan Processing Team","metadata":"{\"messageId\":\"mock-email-id\"}","sentAt":"2026-02-13T10:00:56.187Z","deliveredAt":null,"openedAt":null,"clickedAt":null,"bouncedAt":null,"createdAt":"2026-02-13T10:00:56.191Z"}

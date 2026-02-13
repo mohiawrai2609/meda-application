@@ -1,6 +1,7 @@
 import fs from 'fs';
 import csv from 'csv-parser';
 import { ExceptionService } from './exception.service';
+import { NotificationService } from './notification.service';
 import { ExceptionType, DocumentType, Severity } from '@meda/shared';
 import { PrismaClient } from '@prisma/client';
 
@@ -8,9 +9,11 @@ const prisma = new PrismaClient();
 
 export class CsvImportService {
     private exceptionService: ExceptionService;
+    private notificationService: NotificationService;
 
     constructor() {
         this.exceptionService = new ExceptionService();
+        this.notificationService = new NotificationService();
     }
 
     async importExceptions(filePath: string): Promise<any[]> {
@@ -44,8 +47,8 @@ export class CsvImportService {
                                         }
                                     }
                                 },
-                                exceptionType: row.exception_type as ExceptionType,
-                                documentType: row.document_type as DocumentType,
+                                exceptionType: row.exception_type as ExceptionType || 'MISSING_DOCUMENT',
+                                documentType: (row.missing_document || row.document_type || 'Unknown') as DocumentType,
                                 description: row.description,
                                 severity: row.severity as Severity || Severity.MEDIUM,
                             };
@@ -53,6 +56,14 @@ export class CsvImportService {
                             const exception = await this.exceptionService.createException(exceptionData);
                             createdExceptions.push(exception);
                         }
+
+                        // Create notification after successful import
+                        await this.notificationService.createNotification({
+                            title: 'Data Import Successful',
+                            message: `Successfully imported ${createdExceptions.length} records.`,
+                            type: 'SUCCESS'
+                        });
+
                         resolve(createdExceptions);
                     } catch (error) {
                         console.error('CSV Import Service Error:', error);

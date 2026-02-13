@@ -1,0 +1,9 @@
+loan_number,borrower_name,borrower_email,exception_type,required_documents,missing_document,status,severity,description
+1001,Amit Sharma,amit.sharma@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, Bank Statement, Salary Slip",Bank Statement,OPEN,HIGH,Last 3 months statement missing
+1002,Priya Singh,priya.singh@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, ITR, Form 16",Form 16,OPEN,MEDIUM,Current year Form 16 required
+1003,Rahul Verma,rahul.verma@example.com,MISSING_DOCUMENT,"Passport, Visa, Offer Letter, Payslips",Offer Letter,OPEN,CRITICAL,Updated offer letter needed
+1004,Sneha Gupta,sneha.gupta@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, Property Papers",Property Papers,OPEN,HIGH,Sale deed copy unclear
+1005,Vikram Malhotra,vikram.malhotra@example.com,MISSING_DOCUMENT,"GST Certificate, Balance Sheet, P&L Account",GST Certificate,OPEN,MEDIUM,Latest GST return missing
+1006,Anjali Desai,anjali.desai@example.com,MISSING_DOCUMENT,"Kisan Credit Card, Land Records, ID Proof",Land Records,OPEN,HIGH,7/12 extract not attached
+1007,Rohan Mehta,rohan.mehta@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, Rent Agreement",Rent Agreement,OPEN,LOW,Expired agreement attached
+1008,Kavita Iyer,kavita.iyer@example.com,MISSING_DOCUMENT,"Company ID, Salary Slip, Bank Statement",Company ID,OPEN,MEDIUM,Clear scan of ID card required

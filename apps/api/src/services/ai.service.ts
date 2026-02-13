@@ -21,13 +21,14 @@ export class AIService {
     }
 
     async generateMessage(exception: Exception, loanContext: any, attemptCount: number): Promise<{ subject: string; body: string }> {
-        if (!this.apiKey || this.apiKey.startsWith('sk-ant-api03-...')) {
+        console.log('DEBUG: AIService apiKey:', this.apiKey);
+        if (!this.apiKey || this.apiKey.startsWith('sk-ant-api03-')) {
             // Return mock response if no API key is set
             console.log('Using Mock AI Response (No API Key)');
             const portalLink = `${process.env.PORTAL_BASE_URL || 'http://localhost:5174'}/?id=${exception.id}`;
             return {
-                subject: `Action Required: Mortgage Document Issue - ${loanContext.loanNumber}`,
-                body: `Hello ${loanContext.borrowerName},\n\nWe are reviewing your mortgage application and noticed an issue with your ${exception.documentType}. Specifically: ${exception.description}.\n\nPlease click the link below to upload the corrected document:\n\n${portalLink}\n\nThank you,\nLoan Processing Team`
+                subject: `Action Required: Please upload your ${exception.documentType}`,
+                body: `Hello ${loanContext.borrowerName},\n\nWe are missing your **${exception.documentType}** for your mortgage application.\n\nSpecific Issue: ${exception.description}.\n\nPlease click the link below to upload your ${exception.documentType}:\n\n${portalLink}\n\nThank you,\nLoan Processing Team`
             };
         }
 

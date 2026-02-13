@@ -11,7 +11,7 @@ async function main() {
         const org = await prisma.organization.create({
             data: {
                 name: 'Test Org ' + Math.random(),
-                settings: { test: true }
+                settings: JSON.stringify({ test: true })
             }
         });
         console.log('Org created:', org.id);
@@ -22,8 +22,7 @@ async function main() {
                 loanNumber: 'TEST-' + Math.floor(Math.random() * 1000000),
                 borrowerName: 'Test Borrower',
                 borrowerEmail: 'test@example.com',
-                organizationId: org.id,
-                status: 'PROCESSING'
+                organizationId: org.id
             }
         });
         console.log('Loan created:', loan.id);

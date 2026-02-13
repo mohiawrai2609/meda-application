@@ -39,10 +39,10 @@ router.post('/seed', async (req, res) => {
         const org = await prisma.organization.create({
             data: {
                 name: 'Default Bank Corp',
-                settings: {
+                settings: JSON.stringify({
                     slaHours: 24,
                     reminderFrequency: 'daily'
-                }
+                })
             }
         });
 

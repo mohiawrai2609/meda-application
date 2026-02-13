@@ -1,0 +1,2 @@
+loan_number,borrower_name,borrower_email,exception_type,required_documents,missing_document,status,severity,description
+987654321,Alice Smith,alice.smith@example.com,MISSING_DOCUMENT,"Pan Card, Aadhaar Card, Bank Statement",Bank Statement,OPEN,MEDIUM,"Missing last 3 months statement"
