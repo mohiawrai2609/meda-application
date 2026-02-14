@@ -25,7 +25,7 @@ export class AIService {
         if (!this.apiKey || this.apiKey.startsWith('sk-ant-api03-')) {
             // Return mock response if no API key is set
             console.log('Using Mock AI Response (No API Key)');
-            const portalLink = `${process.env.PORTAL_BASE_URL || 'http://localhost:5174'}/?id=${exception.id}`;
+            const portalLink = `${process.env.PORTAL_BASE_URL || 'https://meda-application-portal.vercel.app'}/?id=${exception.id}`;
             return {
                 subject: `Action Required: Please upload your ${exception.documentType}`,
                 body: `Hello ${loanContext.borrowerName},\n\nWe are missing your **${exception.documentType}** for your mortgage application.\n\nSpecific Issue: ${exception.description}.\n\nPlease click the link below to upload your ${exception.documentType}:\n\n${portalLink}\n\nThank you,\nLoan Processing Team`
@@ -42,7 +42,7 @@ export class AIService {
     - Keep emails under 200 words
     - Always include a clear call to action`;
 
-        const portalLink = `${process.env.PORTAL_BASE_URL || 'http://localhost:5174'}/?id=${exception.id}`;
+        const portalLink = `${process.env.PORTAL_BASE_URL || 'https://meda-application-portal.vercel.app'}/?id=${exception.id}`;
 
         const userPrompt = `Generate a friendly email for:
         - Borrower: ${loanContext.borrowerName}
